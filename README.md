@@ -381,8 +381,6 @@ curl -sS --fail-with-body "${AZURE_AI_ENDPOINT}/openai/v1/chat/completions" \
 ```
 
 **成功の目印:** 応答 JSON の `choices` → `message` → `content` に `2` が入る。
-画像：wsl1.png
-
 
 | エラー | 最初に確認するもの |
 |---|---|
@@ -402,7 +400,6 @@ uv run python dsv4_wsl_poc_agent.py --ping-llm
 ```
 
 **成功の目印:** 最後に `llm_response=2` と表示される。この確認では Azure AI だけを呼び出す。
-画像：wsl2.png
 
 ---
 
