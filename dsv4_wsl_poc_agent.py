@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 import os
 import re
 import shutil
@@ -69,6 +70,29 @@ SQL_SERVER_ENV_NAMES = (
     "MSSQL_PASSWORD",
 )
 SQL_SERVER_MCP_TOOL_NAMES = {"execute_sql", "list_tables"}
+
+_ASYNCIO_SHUTDOWN_NOISE = "an error occurred during closing of asynchronous generator"
+
+
+class _AsyncGeneratorShutdownNoiseFilter(logging.Filter):
+    """終了時に出る既知のノイズを非表示にする。
+
+    Strands の OpenAI モデルは応答ストリームを最後まで読み切らないため、
+    イベントループの終了時に httpcore2 の非同期ジェネレーターが閉じられる。
+    そのとき asyncio が「an error occurred during closing of asynchronous
+    generator ...」とトレースバックをログへ出力するが、回答や処理結果には
+    影響しない。このメッセージ 1 件だけを除外する。
+    """
+
+    def filter(self, record: logging.LogRecord) -> bool:
+        return _ASYNCIO_SHUTDOWN_NOISE not in record.getMessage()
+
+
+def _suppress_asyncgen_shutdown_noise() -> None:
+    """asyncio ロガーへ上記フィルターを 1 度だけ取り付ける。"""
+    logger = logging.getLogger("asyncio")
+    if not any(isinstance(item, _AsyncGeneratorShutdownNoiseFilter) for item in logger.filters):
+        logger.addFilter(_AsyncGeneratorShutdownNoiseFilter())
 
 
 def azure_ai_endpoint() -> str:
@@ -584,6 +608,7 @@ def _troubleshooting_hint(error: Exception) -> str:
 
 
 def main() -> int:
+    _suppress_asyncgen_shutdown_noise()
     parser = argparse.ArgumentParser(
         description="Azure DeepSeek V4 + BigQuery の段階確認用サンプル",
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -678,7 +703,13 @@ SQL Server は --ping-toolbox で確認してから、通常実行に --sql-serv
         include_bigquery_sdk=not args.sql_server_only,
         include_gcs=not args.sql_server_only,
     )
-    print(result)
+    # 最終回答はコールバックハンドラーがストリーミング表示済み。ここで print すると
+    # 同じ内容が 2 回表示されるため、結果の有無だけ確認する。
+    if result is None:
+        print("[WARN] エージェントから結果が返りませんでした", file=sys.stderr)
+    # ストリーミング表示は改行で終わらないことがあるため、シェルのプロンプトと
+    # 重ならないように改行を補う。
+    print(flush=True)
     return 0
 
 
