@@ -168,10 +168,6 @@ PoC の感覚（Flash / Azure Global の上表を仮に使う場合）:
 
 ### 5. 作業手順（Windows + WSL2 Ubuntu 24.04）
 
-
-
-
-
 `<PROXY_HOST>`、`<RESOURCE_GROUP>` などの `< >` 部分は、自社の値へ置き換える。
 
 | 手順 | 接続確認の対象 | 失敗時に確認する担当 |
@@ -353,10 +349,6 @@ az cognitiveservices account deployment show \
 ```
 
 **成功の目印:** `provisioningState` が `Succeeded`。
-
-ポータルでFoundryを確認した様子
-画像：azure1.png
-
 
 #### 5.6 Azure AI の接続情報を設定する
 
