@@ -629,7 +629,6 @@ gcloud version
 会社プロキシ下では、シェルの `https_proxy` に加え [gcloud のプロキシ設定](https://docs.cloud.google.com/sdk/docs/proxy-settings) が必要なことがある。
 
 ```bash
-# 値は情シス指定
 gcloud config set proxy/type http
 gcloud config set proxy/address "<PROXY_HOST>"
 gcloud config set proxy/port "<PROXY_PORT>"
