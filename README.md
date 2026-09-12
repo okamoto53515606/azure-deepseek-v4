@@ -138,7 +138,7 @@ Microsoft の表はリージョンコードだけなので、国に直すと次�
 C の中でも Azure Foundry を手順化する理由。
 
 1. **Bedrock / Vertex では、この資料の時点で V4 Flash を標準的なマネージドモデルとして利用しにくい。**
-   Amazon Bedrock にあるのは DeepSeek-R1 / V3.1 / V3.2 など（東京含むリージョンあり）。**V4 Flash-0731 相当は、この時点では Azure Foundry や Cloudflare 側が先行。** 「AWS に全部寄せたい」は将来の話として、**今 V4 Flash を第三者がホストした形で試すなら Azure か Cloudflare。**
+   Amazon Bedrock にあるのは DeepSeek-R1 / V3.1 / V3.2 など（東京含むリージョンあり）。**V4 Flash-0731 相当は、この時点では Azure Foundry や Cloudflare 側が先行。** 「V4-Flash-0731 かつ 国内に閉じたい」は将来の話として、**今 V4 Flash を第三者がホストした形で試すなら Azure か Cloudflare。**
 2. **請求を既存の Azure 契約にまとめられる。** 多くの事業会社はすでに Microsoft / Azure を持っている。カードを新たに Cloudflare や DeepSeek 公式に切らずに試せる。
 3. **Foundry + Key Vault + 既存の情シス手続き**に乗せやすい。PoC でも「誰のサブスクで、どの RG か」が残る。
 
